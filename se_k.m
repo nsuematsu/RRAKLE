@@ -1,4 +1,4 @@
-function K = k_se(x1,x2,kparam)
+function K = se_k(x1,x2,param)
 
     n1 = numel(x1);
     n2 = numel(x2);
@@ -6,6 +6,6 @@ function K = k_se(x1,x2,kparam)
     X1 = repmat(x1(:),1,n2);
     X2 = repmat(x2(:),1,n1);
     d2 = (X1 - X2').^2;
-    K = exp(-1/(2*kparam.l^2)*d2);
+    K = param.v*exp(-1/(2*param.l^2)*d2);
     
 end

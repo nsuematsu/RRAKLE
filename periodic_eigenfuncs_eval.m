@@ -1,8 +1,9 @@
-function Phi = eval_periodic_eigenfuncs(x,q,domain)
+function Phi = periodic_eigenfuncs_eval(x,q,param)
 %
 % x: n×1ベクトル
 % q: φ_0(x) から φ_{q-1}(x) の値を求める．
-% domain: [a,b]
+% param: パラメータ
+%    param.domain: [a,b]
 %
 % Phi = [φ_0(x(1)) φ_1(x(1)) ... φ_{q-1}(x(1));
 %        φ_0(x(2)) φ_1(x(2)) ... φ_{q-1}(x(2));
@@ -11,7 +12,7 @@ function Phi = eval_periodic_eigenfuncs(x,q,domain)
 %         .
 %        φ_0(x(n)) φ_1(x(n)) ... φ_{q-1}(x(n))]
 
-    a = domain(1); b = domain(2);
+    a = param.domain(1); b = param.domain(2);
     rho = 1/(b-a);
     x = rho*(x(:)-a);
     n = length(x);
