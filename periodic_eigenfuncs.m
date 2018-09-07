@@ -1,4 +1,4 @@
-function Phi = periodic_eigenfuncs_eval(x,q,param)
+function Phi = periodic_eigenfuncs(x,q,param)
 %
 % x: n×1ベクトル
 % q: φ_0(x) から φ_{q-1}(x) の値を求める．
