@@ -1,9 +1,31 @@
-function evs = discreteT_eigenvalues_for_dirichlet(q,param,k,b)
-    L = param.domain(2) - param.domain(1);
-    J = 1:q;
-    Z = 4*hypergeom([1,-1i*b-k/2+1,1i*b-k/2+1],[2-1i*b+k/2,2+1i*b+k/2],1)...
-        /((4+4*b^2-4*k+k^2)*pochhammer(2-k/2-1i*b,k)*pochhammer(2-k/2+1i*b,k));
-    evs = real(L*bare_t(J,k,-k/2,b)/Z);
+function evs = discreteT_eigenvalues_for_dirichlet_2(param)
+% discreteT_eigenvalues_for_dirichlet と正規化の仕方が異なり，
+% 
+    a = param.domain(1); b = param.domain(2);
+    m = param.m;
+  
+    v = param.ev.sigma^2;
+    k = param.ev.k;
+    bb = param.ev.b;
+        
+    P = b-a;
+    J = 1:m;
+
+    % normalize so that its infinite sum to 1, first.
+    Z = 4*hypergeom([1,-1i*bb-k/2+1,1i*bb-k/2+1],[2-1i*bb+k/2,2+1i*bb+k/2],1)...
+        /((4+4*bb^2-4*k+k^2)*pochhammer(2-k/2-1i*bb,k)*pochhammer(2-k/2+1i*bb,k));
+    evs = real(bare_t(J,k,-k/2,bb)/Z);
+    
+    % obatain max{k(x,x)}=k(c,c) when sum(κ_j)=1.
+    c = .5*(a+b);
+    Phi = param.ef.fh(c,param);
+    kMax = Phi*diag(evs)*Phi';
+    
+    % k(x,x) of the corresponding stationary kernel.
+    k = v;
+    
+    % normalize
+    evs = k/kMax*evs;
 end
 
 function v = bare_t(j,k,a,b)

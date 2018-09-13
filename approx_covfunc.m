@@ -1,8 +1,8 @@
-function [K,evs,Phi1,Phi2] = approx_covfunc(x1,x2,q,fh_ev,fh_ef,param)
+function [C,evs,Phi1,Phi2] = approx_covfunc(x1,x2,param)
 
-    evs = fh_ev(q,param);
-    Phi1 = fh_ef(x1,q,param);
-    Phi2 = fh_ef(x2,q,param);
+    evs = param.ev.fh(param);
+    Phi1 = param.ef.fh(x1,param);
+    Phi2 = param.ef.fh(x2,param);
     
-    K = Phi1*diag(evs)*Phi2';
+    C = Phi1*diag(evs)*Phi2';
 end
