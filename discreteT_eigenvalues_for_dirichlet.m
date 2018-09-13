@@ -1,4 +1,4 @@
-function evs = discreteT_eigenvalues_for_dirichlet_2(param)
+function evs = discreteT_eigenvalues_for_dirichlet(param)
 % discreteT_eigenvalues_for_dirichlet と正規化の仕方が異なり，
 % 
     a = param.domain(1); b = param.domain(2);

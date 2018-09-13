@@ -1,4 +1,4 @@
-function evs = normal_eigenvalues_for_dirichlet_2(param)
+function evs = normal_eigenvalues_for_dirichlet(param)
 %
     a = param.domain(1); b = param.domain(2);
     m = param.m;
