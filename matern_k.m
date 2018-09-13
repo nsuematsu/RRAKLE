@@ -12,5 +12,7 @@ function C = matern_k(x1,x2,param)
     X2 = repmat(x2(:),1,n1);
     A = sqrt(2*nu)/l*abs(X1 - X2');
     C = 2^(1-nu)/gamma(nu)*(A).^nu;
-    C = v*C.*besselk(nu,A);    
+    C = C.*besselk(nu,A);
+    C(A==0) = 1;
+    C = v*C;
 end
