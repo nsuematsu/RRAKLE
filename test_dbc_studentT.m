@@ -1,4 +1,4 @@
-a = 0; b = 10;
+a = -10; b = 10;
 c = 0.5*(a+b);
 rho = 1/(b-a);
 m = 200;
@@ -8,12 +8,12 @@ clear param;
 param.domain = [a,b];
 param.m = m;
 
-param.ev.fh = @studentT_eigenvalues_for_dirichlet;
+param.ev.fh = @dbc_ev_studentT;
 param.ev.sigma = 1;
-param.ev.nu = 3;
-param.ev.scale = 3;
+param.ev.tau = 3;
+param.ev.scale = 2;
 
-param.ef.fh = @dirichlet_eigenfuncs;
+param.ef.fh = @dbc_ef;
 
 x1 = linspace(a,b,101);
 
@@ -24,7 +24,7 @@ fprintf('sum(evs)=%f and (b-a)=%f\n',sum(evs),b-a)
 figure;
 subplot(2,2,1)
 param.k.sigma = param.ev.sigma;
-param.k.nu = 2*param.ev.nu;
+param.k.nu = .5*param.ev.tau;
 param.k.l = 2/(2*pi*rho*param.ev.scale);
 Cmat = matern_k(x1,c,param);
 index_c = find(x1==c);

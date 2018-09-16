@@ -8,9 +8,9 @@ param.ev.fh: Function handle to calc eigenvalues.
 param.ev.sigma: Eigenvalues are supposed to be mutiplied by
  σ^2. Usually, this parameter corresponds to param.k_opt.sigma.
 
-param.fh_k: Function handle for a covariance function.
-param.k_opt.l
-param.k_opt.sigma: k(x,x') = σ^2*something.
+param.k.fh: Function handle for a covariance function.
+param.k.l
+param.k.sigma: k(x,x') = σ^2*something.
 
 param.sigma_eps: Standard deviation of observation errors.
 

@@ -1,22 +1,20 @@
-function evs = discreteT_eigenvalues_for_dirichlet(param)
+function evs = dbc_ev_discreteT(param)
 % 
-    a = param.domain(1); b = param.domain(2);
     m = param.m;
   
     v = param.ev.sigma^2;
     k = param.ev.k;
-    bb = param.ev.b;
+    b = param.ev.b;
         
-    P = b-a;
     J = 1:m;
 
     % normalize so that its infinite sum to 1, first.
-    Z = 4*hypergeom([1,-1i*bb-k/2+1,1i*bb-k/2+1],[2-1i*bb+k/2,2+1i*bb+k/2],1)...
-        /((4+4*bb^2-4*k+k^2)*pochhammer(2-k/2-1i*bb,k)*pochhammer(2-k/2+1i*bb,k));
-    evs = real(bare_t(J,k,-k/2,bb)/Z);
+    Z = 4*hypergeom([1,-1i*b-k/2+1,1i*b-k/2+1],[2-1i*b+k/2,2+1i*b+k/2],1)...
+        /((4+4*b^2-4*k+k^2)*pochhammer(2-k/2-1i*b,k)*pochhammer(2-k/2+1i*b,k));
+    evs = real(bare_t(J,k,-k/2,b)/Z);
     
     % obatain max{k(x,x)}=k(c,c) when sum(κ_j)=1.
-    c = .5*(a+b);
+    c = mean(param.domain); % The center of the domain.
     Phi = param.ef.fh(c,param);
     kMax = Phi*diag(evs)*Phi';
     

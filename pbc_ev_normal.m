@@ -1,5 +1,6 @@
-function evs = normal_eigenvalues_for_periodic(param)
-%
+function evs = pbc_ev_normal(param)
+% pbc_ev_normal returns eigenvalues defined using Normal distribution
+% for the eigensystem under the periodic boundary condition.
 % 
     a = param.domain(1); b = param.domain(2);
     m = param.m;

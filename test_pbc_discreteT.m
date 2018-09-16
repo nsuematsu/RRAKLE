@@ -3,12 +3,12 @@ a = 0; b = 10;
 param.domain = [a,b];
 param.m = 100;
 
-param.ev.fh = @discreteT_eigenvalues_for_periodic;
+param.ev.fh = @pbc_ev_discreteT;
 param.ev.sigma = 1;
-param.ev.k = 3/2; % ポッホハマー記号で計算しているので整数でなくてよい
+param.ev.k = 3;
 param.ev.b = 4;
 
-param.ef.fh = @periodic_eigenfuncs;
+param.ef.fh = @pbc_ef;
 
 
 x1 = linspace(a,b,101);

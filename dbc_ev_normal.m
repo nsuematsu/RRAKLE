@@ -1,4 +1,4 @@
-function evs = normal_eigenvalues_for_dirichlet(param)
+function evs = dbc_ev_normal(param)
 %
     a = param.domain(1); b = param.domain(2);
     m = param.m;

@@ -2,17 +2,12 @@ a = 0; b = 10;
 c = 0.5*(a+b);
 m = 200;
 
-clear param;
-
 param.domain = [a,b];
 param.m = m;
 
-param.ev.fh = @discreteT_eigenvalues_for_dirichlet;
+param.ev.fh = @dbc_ev_normal;
 param.ev.sigma = 1;
-param.ev.k = 3/2;
-param.ev.b = 10;
-
-param.ef.fh = @dirichlet_eigenfuncs;
+param.ev.l = 1;
 
 x1 = linspace(a,b,101);
 
@@ -23,15 +18,13 @@ fprintf('sum(evs)=%f and (b-a)=%f\n',sum(evs),b-a)
 figure;
 subplot(2,2,1)
 param.k.sigma = param.ev.sigma;
-param.k.nu = 2*param.ev.k+1;
-param.k.l =1/sqrt(param.ev.k^4/4+param.ev.b^2);
-Cmat = matern_k(x1,c,param);
+param.k.l = param.ev.l;
+Cse = se_k(x1,c,param);
 index_c = find(x1==c);
-plot(x1,C(index_c,:),x1,Cmat,'--');
-% plot(x1,C(index_c,:));
+plot(x1,C(index_c,:),x1,Cse,'--');
 xlabel('$x$','Interpreter','latex')
-ylabel('$k(x,c)$ or $k_\mathrm{Matern}(x,c)$','Interpreter','latex')
-% ylabel('$k(x,c)$','Interpreter','latex')
+ylabel('$k(x,c)$ or $k_\mathrm{SE}(x,c)$','Interpreter','latex')
+
 subplot(2,2,2)
 [X,Y]=meshgrid(x1);
 mesh(X,Y,C);

@@ -1,4 +1,5 @@
-function Phi = periodic_eigenfuncs(x,param)
+function Phi = pbc_ef(x,param)
+% pbc_ef returns the values of the m eigenfunctions for the Periodic BC.
 %
 % x: n×1ベクトル
 % q: φ_0(x) から φ_{q-1}(x) の値を求める．

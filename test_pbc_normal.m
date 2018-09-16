@@ -3,11 +3,11 @@ a = 0; b = 10;
 param.domain = [a,b];
 param.m = 100;
 
-param.ev.fh = @normal_eigenvalues_for_periodic;
+param.ev.fh = @pbc_ev_normal;
 param.ev.sigma = 1;
 param.ev.l = 1;
 
-param.ef.fh = @periodic_eigenfuncs;
+param.ef.fh = @pbc_ef;
 
 x1 = linspace(a,b,101);
 x2 = a;

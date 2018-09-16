@@ -1,13 +1,19 @@
-function [mu,Sigma] = std_gpr_fixed_hyps(x,y,xstar,param)
+function [mu,Sigma,L] = std_gpr_fixed_hyps(x,y,xstar,param)
 % 標準的ガウス過程回帰を固定ハイパーパラメータで行う関数．
 
-    n = length(x);
+    n = size(x,1);
 
-    k_x_x = param.fh_k(x,x,param);
-    k_xstar_x = param.fh_k(xstar,x,param);
+    C_x_x = param.k.fh(x,x,param);
+    C_xstar_x = param.k.fh(xstar,x,param);
+    C_xstar_xstar = param.k.fh(xstar,xstar,param);
     
-    tmp = k_xstar_x / (k_x_x + param.s_eps.^2 * eye(n));
+    tmp = C_xstar_x / (C_x_x + param.sigma_eps.^2 * eye(n));
     mu = tmp * y(:);
-    Sigma = tmp * k_xstar_x';
+    Sigma = C_xstar_xstar - tmp*C_xstar_x';
+    
+    if nargout > 2
+        t = [param.sigma_eps,param.k.sigma,param.k.l];
+        L = param.k.fh_L(t,x,y);
+    end
 
 end
