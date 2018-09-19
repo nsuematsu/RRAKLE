@@ -10,10 +10,14 @@ function evs = pbc_ev_pse(param)
 
     a = param.domain(1); b = param.domain(2);
     m = param.m;
+    
+    l = param.ev.l;
+    v = param.ev.sigma^2;
 
     rho = 1/(b-a);
+
     
     nu = floor((1:m)/2);
-    x = 1/(2*pi*rho*param.l)^2;
-    evs = param.v/rho*besseli(nu,x)/exp(x);
+    x = 1/(2*pi*rho*l)^2;
+    evs = v/rho*besseli(nu,x)/exp(x);
 end

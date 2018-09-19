@@ -7,18 +7,20 @@ xstar = linspace(min(x),max(x),101)';
 clear param;
 
 param.domain = [-10,20];
-param.m = 501;
+param.m = 101;
 param.sigma_eps = .1;
 param.ev.l = 1;
 param.ev.sigma = 1;
 
-param.ef.fh = @periodic_eigenfuncs;
-param.ev.fh = @normal_eigenvalues_for_periodic;
-param.k.fh_L = @se_L;
+param.ef.fh = @pbc_ef;
+param.ev.fh = @pbc_ev_pse;
+param.ev.fh_L = @pbc_ev_pse_L;
+param.k.fh_L = @pse_L;
+
 
 [mu,Sigma,L] = gpr_fixed_hyps(x,y,xstar,param);
 
-fprintf('L=%f\n',L);
+fprintf('L =%f\n',L);
 
 figure
 std = sqrt(diag(Sigma));

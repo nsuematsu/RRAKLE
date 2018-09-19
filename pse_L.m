@@ -1,4 +1,4 @@
-function [nlml,K,S] = se_L(t,x,y)
+function [L,K,S] = pse_L(t,x,y,param)
 %
 % Inputs:
 %   t(1) = θ_1 = log(σ_ε)
@@ -11,11 +11,9 @@ function [nlml,K,S] = se_L(t,x,y)
     
     x = x(:); y = y(:);
     n = length(x);
-    
     param.k.sigma = sk;
     param.k.l = l;
-    
-    K = se_k(x,x,param);
+    K = pse_k(x,x,param);
     S = K + se^2*eye(n);
-    nlml = 0.5*(n*log(2*pi)+log(det(S))+y'*(S\y));
+    L = 0.5*( n*log(2*pi)+log(det(S) )+y'*(S\y));
 end
