@@ -1,4 +1,4 @@
-function evs = dbc_ev_normal(param)
+function [evs] = dbc_ev_normal(param)
 %
     a = param.domain(1); b = param.domain(2);
     m = param.m;
@@ -23,4 +23,5 @@ function evs = dbc_ev_normal(param)
     
     % normalize
     evs = k/kMax*evs;
+    
 end

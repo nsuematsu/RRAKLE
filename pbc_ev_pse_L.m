@@ -1,19 +1,20 @@
-function L = pbc_ev_pse_L(t,x,y,param)
-% k_{PSE}の固有値を用いる時の，与えられたθの下での
+function [L,gradL] = pbc_ev_pse_L(t,x,y,param)
+% 周期境界条件の下で，与えられたθでの
 % 負の対数周辺尤度の reduced rank 近似を求める関数.
 %
 % Inputs:
 %   t(1) = θ_1 = log(σ_ε)
-%   t(2) = θ_2 = log(σ_k)
+%   t(2) = θ_2 = log(σ)
 %   t(3) = θ_3 = log(l)
 
     m = param.m;
     n = length(x);
     se = exp(t(1));
     
-    param.sigma_eps = se;
-    param.ev.sigma = exp(t(2));
-    param.ev.l = exp(t(3));
+    param = param.fh_setparam(t);
+    % param.sigma_eps = se;
+    % param.ev.sigma = exp(t(2));
+    % param.ev.l = exp(t(3));
     
     Phi = param.ef.fh(x,param);
     evs = param.ev.fh(param);
@@ -32,5 +33,9 @@ function L = pbc_ev_pse_L(t,x,y,param)
 %     R = chol(B);    
 %     v = R'\(Phi'*y);
 %     L = L + + .5/se^2*(y'*y-v'*v);
+
+    if nargout > 1
+        
+    end
 
 end

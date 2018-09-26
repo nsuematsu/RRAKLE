@@ -1,5 +1,5 @@
 function [mu_dag,Sigma_dag,L] = gpr_fixed_hyps(x,y,xdag,param)
-% ガウス過程回帰を固定ハイパーパラメータで行う関数．
+% 提案手法によるガウス過程回帰を固定ハイパーパラメータで行う関数．
    
     m = param.m;
     se = param.sigma_eps;

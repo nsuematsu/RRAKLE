@@ -1,4 +1,4 @@
-function gradL = se_gradL(t,x,y,C,S)
+function gradL = se_gradL(t,x,y,C,Sig)
 % gradL_se returns a gradient vector of the negative log likelihood
 % for SE kernel.
 % Note that m(x)=0 is assumed in this implementation.
@@ -19,27 +19,27 @@ function gradL = se_gradL(t,x,y,C,S)
         param.k.sigma = sk;
         param.k.l = l;
         C = se_k(x,x,param); % C_{x,x}
-        S = C + exp(2*se)*eye(length(x)); % Σ
+        Sig = C + exp(2*se)*eye(length(x)); % Σ
     end
     
     gradL = zeros(3,1);
-    Sinv_y = S\y;
+    Sig_rd_y = Sig\y;
     
     % dL/dt1
-    dS = 2*se^2*eye(length(x));
+    dSig = 2*se^2*eye(length(x));
     gradL(1) = dLdt();
     
     % dL/dt2
-    dS = 2*S;
+    dSig = 2*Sig;
     gradL(2) = dLdt();
     
     % dL/dt3
     diff = repmat(x,1,length(x));
-    R = (diff - diff').^2;    
-    dS = l^(-2)*R.*C;
+    S = (diff - diff').^2;    
+    dSig = l^(-2)*S.*C;
     gradL(3) = dLdt();
 
     function dL = dLdt()
-        dL = 0.5*(trace(S\dS)-Sinv_y'*dS*Sinv_y);
+        dL = 0.5*(trace(Sig\dSig)-Sig_rd_y'*dSig*Sig_rd_y);
     end
 end
