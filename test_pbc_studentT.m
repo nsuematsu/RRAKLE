@@ -7,8 +7,8 @@ param.m = 101;
 
 param.ev.fh = @pbc_ev_studentT;
 param.ev.sigma = 1;
-param.ev.tau = 3;
-param.ev.scale = 1.5;
+param.ev.nu = 3;
+param.ev.l = 1.5;
 
 param.ef.fh = @pbc_ef;
 
@@ -22,8 +22,8 @@ fprintf('sum(evs)=%f and (b-a)=%f\n',sum(evs),b-a)
 figure;
 subplot(2,2,1)
 param.k.sigma = param.ev.sigma;
-param.k.nu = 0.5*param.ev.tau;
-param.k.l = 1/(2*pi*rho*param.ev.scale);
+param.k.nu = param.ev.nu;
+param.k.l = param.ev.l;
 Cmat = matern_k(x1,a,param);
 plot(x1,C,x1,Cmat,'--')
 xlabel('$x$','Interpreter','latex')

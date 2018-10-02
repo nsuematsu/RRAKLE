@@ -1,4 +1,4 @@
-function [L,K,S] = pse_L(t,x,y,param)
+function [L,gradL] = pse_L(t,x,y,param)
 %
 % Inputs:
 %   t(1) = θ_1 = log(σ_ε)
@@ -9,11 +9,36 @@ function [L,K,S] = pse_L(t,x,y,param)
     sk = exp(t(2));
     l = exp(t(3));
     
+    rho = 1/(param.domain(2)-param.domain(1));
+    
     x = x(:); y = y(:);
     n = length(x);
     param.k.sigma = sk;
     param.k.l = l;
     K = pse_k(x,x,param);
-    S = K + se^2*eye(n);
-    L = 0.5*( n*log(2*pi)+log(det(S) )+y'*(S\y));
+    Sig = K + se^2*eye(n);
+    L = 0.5*( n*log(2*pi)+log(det(Sig) )+y'*(Sig\y));
+    
+    if nargout > 1
+        gradL = zeros(3,1);
+        Sig_rd_y = Sig\y;
+    
+        % dL/dt1
+        dSig = 2*se^2*eye(length(x));
+        gradL(1) = dLdt();
+    
+        % dL/dt2
+        dSig = 2*Sig;
+        gradL(2) = dLdt();
+    
+        % dL/dt3
+        diff = repmat(x,1,length(x));
+        S = sin(pi*rho*(diff - diff')).^2;
+        dSig = l^(-2)*S.*K;
+        gradL(3) = dLdt();
+    end
+
+    function dL = dLdt()
+        dL = 0.5*(trace(Sig\dSig)-Sig_rd_y'*dSig*Sig_rd_y);
+    end
 end

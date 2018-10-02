@@ -16,10 +16,10 @@ function [mu,Sigma,t] = std_gpr_ml_hyps(x,y,xstar,param,opts)
     
     % Perform the optimization.
     % fh = @(t)L_gradL(t,x,y,param);
-    t = fminunc(@L_gradL,t0,optimOpts,x,y,param);
+    t = fminunc(param.k.fh_L,t0,optimOpts,x,y,param);
     
     % Calc mu and Sigma
-    param = param.fh_setparam(t,param);
+    param = param.k.fh_setparam(t,param);
     se = param.sigma_eps; % σ_ε    
     Kxx = param.k.fh(x,x,param);
     S = Kxx+se^2*eye(size(x,1));
@@ -31,9 +31,9 @@ function [mu,Sigma,t] = std_gpr_ml_hyps(x,y,xstar,param,opts)
     Sigma = Kxdagxdag - tmp*Kxxdag;    
 end
 
-function [L,gradL] = L_gradL(t,x,y,param)
-    [L,C,S] = param.k.fh_L(t,x,y);
-    if nargout > 1
-        gradL = param.k.fh_gradL(t,x,y,C,S);
-    end
-end
+% function [L,gradL] = L_gradL(t,x,y,param)
+%     [L,C,S] = param.k.fh_L(t,x,y);
+%     if nargout > 1
+%         gradL = param.k.fh_gradL(t,x,y,C,S);
+%     end
+% end

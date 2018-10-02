@@ -11,13 +11,13 @@ function [L,gradL] = pbc_ev_pse_L(t,x,y,param)
     n = length(x);
     se = exp(t(1));
     
-    param = param.fh_setparam(t);
+    param = pbc_ev_pse_setparam(t,param);
     % param.sigma_eps = se;
     % param.ev.sigma = exp(t(2));
     % param.ev.l = exp(t(3));
     
     Phi = param.ef.fh(x,param);
-    evs = param.ev.fh(param);
+    [evs,gevs] = param.ev.fh(param);
     Lam = diag(evs);
     
     % 不完全な reduced rank 近似（チェック用）
@@ -26,15 +26,40 @@ function [L,gradL] = pbc_ev_pse_L(t,x,y,param)
     
     % reduced rank 近似
     A = Phi'*Phi*Lam+se^2*eye(m);
-    L = .5*n*log(2*pi)+(n-m)*log(se)+.5*log(det(A));
+    Binv = Lam/A;
+    C = A\(Phi'*Phi);
     v = Phi'*y;
-    L = L + .5/se^2*(y'*y-v'*(Lam/A)*v);
-%     B = Phi'*Phi+se^2*diag(1./evs);
-%     R = chol(B);    
-%     v = R'\(Phi'*y);
-%     L = L + + .5/se^2*(y'*y-v'*v);
+    u = Binv*v;
+    w = A\v;
+    L = .5*n*log(2*pi)+(n-m)*log(se)+.5*log(det(A)) ...
+        + .5/se^2*(y'*y-v'*u);
 
     if nargout > 1
+        % dL/dθ1
+        dL1dt1 = n-m;
+    
+        dL2dt1 = se^2*trace(inv(A));        
+        
+        dL3dt1 = -se^(-2)*(y'*y-v'*u) + u'*w;
+        
+        % dL/dθ2
+        dL2dt2 = trace(C*Lam);
+        
+        dL3dt2 = -(v'*Binv)*w;        
+        
+        % dL/dθ3
+        dLamdt3 = diag(gevs);
+        
+        dL2dt3 = 0.5*trace(C*dLamdt3);
+        
+        dL3dt3 = -0.5*w'*dLamdt3*w;
+        
+        % 
+        gradL = [...
+            dL1dt1 + dL2dt1 + dL3dt1; ...
+            dL2dt2 + dL3dt2; ...
+            dL2dt3 + dL3dt3 ...
+            ];
         
     end
 

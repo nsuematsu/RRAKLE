@@ -1,4 +1,4 @@
-function [L,gradL] = pbc_ev_normal_L(t,x,y,param)
+function [L,gradL] = pbc_ev_studentT_L(t,x,y,param)
 % 周期境界条件の下で，与えられたθでの
 % 負の対数周辺尤度の reduced rank 近似を求める関数.
 %
@@ -13,11 +13,8 @@ function [L,gradL] = pbc_ev_normal_L(t,x,y,param)
     m = param.m;
     n = length(x);
     se = exp(t(1));
-    
-    param = pbc_ev_normal_setparam(t,param);
-    % param.sigma_eps = se;
-    % param.ev.sigma = exp(t(2));
-    % param.ev.l = exp(t(3));
+        
+    param = pbc_ev_studentT_setparam(t,param);
     
     Phi = param.ef.fh(x,param);
     [evs,gevs] = param.ev.fh(param);
@@ -54,17 +51,25 @@ function [L,gradL] = pbc_ev_normal_L(t,x,y,param)
         dL3dt2 = -(v'*Binv)*w;        
         
         % dL/dθ3
-        dLamdt3 = diag(gevs);
+        dLamdt3 = diag(gevs(1,:));
         
         dL2dt3 = 0.5*trace(C*dLamdt3);
         
         dL3dt3 = -0.5*w'*dLamdt3*w;
         
+        % dL/dθ4
+        dLamdt4 = diag(gevs(2,:));
+        
+        dL2dt4 = 0.5*trace(C*dLamdt4);
+        
+        dL3dt4 = -0.5*w'*dLamdt4*w;
+
         % 
         gradL = [...
             dL1dt1 + dL2dt1 + dL3dt1; ...
             dL2dt2 + dL3dt2; ...
-            dL2dt3 + dL3dt3 ...
+            dL2dt3 + dL3dt3; ...
+            dL2dt4 + dL3dt4 ...
             ];
     
     end 

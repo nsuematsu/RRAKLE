@@ -5,18 +5,33 @@ load(fname);
 
 xstar = linspace(min(x),max(x),101)';
 
-t0 = [log(2),log(2),log(2)];
 
+
+% use se
+opts.t0 = [log(2),log(2),log(2)];
+opts.use_gradient = true;
 param.k.fh = @se_k;
 param.k.fh_L = @se_L;
-param.k.fh_gradL = @se_gradL;
-param.fh_setparam = @se_setparam;
-opts.t0 = t0;
-opts.use_gradient = true;
+param.k.fh_setparam = @se_setparam;
+
+% % use pse
+% opts.t0 = [log(2),log(2),log(2)];
+% opts.use_gradient = true;
+% param.domain = [-10,20];
+% param.k.fh = @pse_k;
+% param.k.fh_L = @pse_L;
+% param.k.fh_setparam = @pse_setparam;
+
+% % use matern (opts.use_gradient must be false)
+% opts.t0 = [log(2),log(2),log(2),log(10)];
+% opts.use_gradient = false;
+% param.k.fh = @matern_k;
+% param.k.fh_L = @matern_L;
+% param.k.fh_setparam = @matern_setparam;
 
 [mu,Sigma,t] = std_gpr_ml_hyps(x,y,xstar,param,opts);
 
-L = param.k.fh_L(t,x,y);
+L = param.k.fh_L(t,x,y,param);
 fprintf('L=%f\n',L)
 
 figure
@@ -33,3 +48,6 @@ hold off
 fprintf('Estimated σ_ε = %f\n', exp(t(1)));
 fprintf('Estimated σ_k = %f\n', exp(t(2)));
 fprintf('Estimated l = %f\n', exp(t(3)));
+if length(t)>3
+    fprintf('Estimated nu = %f\n', exp(t(4)));
+end

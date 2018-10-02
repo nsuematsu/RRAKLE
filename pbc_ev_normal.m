@@ -13,17 +13,17 @@ function [evs,gevs] = pbc_ev_normal(param)
     rho = 1/P;
 
     S = floor(((0:m-1)+1)/2);
-    tmp = exp(-2*(pi*S*rho*l).^2);
+    e = exp(-2*(pi*S*rho*l).^2);
     
     % 無限項まで考慮した正規化
     % evs = v*tmp;
     % evs = P/theta3(exp(-2*(pi*rho*l).^2))*evs;
     
     % m項までで正規化
-    evs = v*P/sum(tmp)*tmp;
+    evs = v*P/sum(e)*e;
     
-    if nargout > 1 % 勾配も必要（勾配と言ってもここでは単なる部分）
-        % とりあえず，正規化を無視した微分
-        gevs = -4*(pi*S*rho*l).^2.*tmp;
+    if nargout > 1 % 勾配も必要（勾配と言ってもここでは単なる微分）
+        d = -4*(pi*S*rho*l).^2.*e;
+        gevs = v*P*(d/sum(e)-e*sum(d)/(sum(e)^2));
     end
 end

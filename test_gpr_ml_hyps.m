@@ -1,12 +1,9 @@
-% run max_marginal_likelihood
+% run gpr_ml_hyps
 
 fname = 'Data/data_24-Oct-2017_with_gp.mat';
 load(fname);
 
 xdag = linspace(min(x),max(x),101)';
-
-t0 = [log(2),log(2),log(2)];
-% t0 = [log(2),log(2)];
 
 clear param;
 
@@ -15,16 +12,31 @@ param.m = 101;
 
 param.ef.fh = @pbc_ef;
 
-param.ev.fh = @pbc_ev_normal;
-param.ev.fh_L = @pbc_ev_normal_L;
+% use pse
+opts.t0 = [log(2),log(2),log(2)];
+opts.use_gradient = true;
+param.ev.fh = @pbc_ev_pse;
+param.ev.fh_L = @pbc_ev_pse_L;
+param.ev.fh_setparam = @pbc_ev_pse_setparam;
 
-param.fh_setparam = @pbc_ev_normal_setparam;
-opts.t0 = t0;
-opts.use_gradient = false;
+% % use normal
+% opts.t0 = [log(2),log(2),log(2)];
+% opts.use_gradient = true;
+% param.ev.fh = @pbc_ev_normal;
+% param.ev.fh_L = @pbc_ev_normal_L;
+% param.ev.fh_setparam = @pbc_ev_normal_setparam;
 
-[mu,Sigma,t,L] = gpr_ml_hyps(x,y,xdag,param,opts);
+% % use studentT
+% opts.t0 = [log(2),log(2),log(2),log(10)];
+% opts.use_gradient = true;
+% param.ev.fh = @pbc_ev_studentT;
+% param.ev.fh_L = @pbc_ev_studentT_L;
+% param.ev.fh_setparam = @pbc_ev_studentT_setparam;
+
+[mu,Sigma,t,L,output] = gpr_ml_hyps(x,y,xdag,param,opts);
 
 fprintf('L=%f\n',L);
+fprintf('iterations=%d\n',output.iterations);
 
 figure
 std = sqrt(diag(Sigma));
@@ -40,3 +52,6 @@ hold off
 fprintf('Estimated σ_ε = %f\n', exp(t(1)));
 fprintf('Estimated σ_k = %f\n', exp(t(2)));
 fprintf('Estimated l = %f\n', exp(t(3)));
+if length(t)>3
+    fprintf('Estimated nu = %f\n', exp(t(4)));
+end
