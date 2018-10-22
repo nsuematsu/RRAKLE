@@ -24,19 +24,15 @@ param.sampling_location = 'linear'; % 等間隔でサンプルを得る
 
 a = param.domain(1);
 b = param.domain(2);
-n = param.data_points + param.test_points;
 
 switch param.sampling_location
   case 'linear'
-    X = linspace(a,b,n);
-    X = X(randperm(n)); % 順序をシャッフル
-    x = X(1:param.data_points);
-    x_test = X(param.data_points+1:end);
-  case 'random'
-    X = rand(1,n)*(b-a)+a;    
-    x = X(1:param.data_points);
-    x_test = X(param.data_points+1:end);
+    x = linspace(a,b,param.data_points);
+  case 'random'    
+    x = a + rand(1,param.data_points)*(b-a);
 end
+x_test = linspace(a,b,param.test_points);
+X = [x(:);x_test(:)];
 
 if param.use_dbc
     bkup = param.sigma_eps;
@@ -45,6 +41,7 @@ if param.use_dbc
     param.sigma_eps = bkup;
     F = mvnrnd(mu,K);
 else
+    X = [x(:);x_test(:)];
     K = param.k.fh(X,X,param);
     F = mvnrnd(zeros(1,n),K);
 end
@@ -56,7 +53,4 @@ y_test = f_test+param.sigma_eps*randn(size(f_test));
 
 save('data.mat','x','f','y','x_test','f_test','y_test','param');
 
-[tmp,I] = sort(x_test);
-plot(x,y,'ro',x_test,y_test,'b.',tmp,f_test(I),'g-','LineWidth',2)
-    
-    
+plot(x,y,'ro',x_test,f_test)
