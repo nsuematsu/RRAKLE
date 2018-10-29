@@ -1,23 +1,24 @@
 % run gpr_ml_hyps
 
-fname = 'Data/data_24-Oct-2017_with_gp.mat';
+% fname = 'Data/data_24-Oct-2017_with_gp.mat';
+fname = 'data.mat';
 load(fname);
 
 xdag = linspace(min(x),max(x),101)';
 
 clear param;
 
-param.domain = [-10,20];
-param.m = 101;
+param.domain = [0,10];
+param.m = 21;
 
 param.ef.fh = @pbc_ef;
 
-% use pse
-opts.t0 = [log(2),log(2),log(2)];
-opts.use_gradient = true;
-param.ev.fh = @pbc_ev_pse;
-param.ev.fh_L = @pbc_ev_pse_L;
-param.ev.fh_setparam = @pbc_ev_pse_setparam;
+% % use pse
+% opts.t0 = [log(2),log(2),log(2)];
+% opts.use_gradient = true;
+% param.ev.fh = @pbc_ev_pse;
+% param.ev.fh_L = @pbc_ev_pse_L;
+% param.ev.fh_setparam = @pbc_ev_pse_setparam;
 
 % % use normal
 % opts.t0 = [log(2),log(2),log(2)];
@@ -32,6 +33,20 @@ param.ev.fh_setparam = @pbc_ev_pse_setparam;
 % param.ev.fh = @pbc_ev_studentT;
 % param.ev.fh_L = @pbc_ev_studentT_L;
 % param.ev.fh_setparam = @pbc_ev_studentT_setparam;
+
+% % use dbc_normal
+% opts.t0 = [log(2),log(2),log(2)];
+% opts.use_gradient = true;
+% param.ev.fh = @dbc_ev_normal;
+% param.ev.fh_L = @dbc_ev_normal_L;
+% param.ev.fh_setparam = @dbc_ev_normal_setparam;
+
+% use dbc_StudentT
+opts.t0 = [log(2),log(2),log(2),log(10)];
+opts.use_gradient = true;
+param.ev.fh = @dbc_ev_studentT;
+param.ev.fh_L = @dbc_ev_studentT_L;
+param.ev.fh_setparam = @dbc_ev_studentT_setparam;
 
 [mu,Sigma,t,L,output] = gpr_ml_hyps(x,y,xdag,param,opts);
 

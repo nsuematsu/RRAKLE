@@ -1,5 +1,5 @@
-function [L,gradL] = pbc_ev_studentT_L(t,x,y,param)
-% 周期境界条件の下で，与えられたθでの
+function [L,gradL] = dbc_ev_studentT_L(t,x,y,param)
+% ディリクレ境界条件の下で，与えられたθでの
 % 負の対数周辺尤度の reduced rank 近似を求める関数.
 %
 % 出力変数が2の時，Lのθに関する勾配も返す．この勾配は，
@@ -9,13 +9,13 @@ function [L,gradL] = pbc_ev_studentT_L(t,x,y,param)
 %   t(1) = θ_1 = log(σ_ε)
 %   t(2) = θ_2 = log(σ)
 %   t(3) = θ_3 = log(l)
-%   t(4) = θ_4 = log(nu)
+%   t(4) = θ_3 = log(nu)
 
     m = param.m;
     n = length(x);
     se = exp(t(1));
         
-    param = dbc_ev_studentT_setparam(t,param);
+    param = pbc_ev_studentT_setparam(t,param);
     
     Phi = param.ef.fh(x,param);
     [evs,gevs] = param.ev.fh(param);
@@ -29,7 +29,7 @@ function [L,gradL] = pbc_ev_studentT_L(t,x,y,param)
     A = Phi'*Phi*Lam+se^2*eye(m);
     Binv = Lam/A;
     C = A\(Phi'*Phi);
-    v = Phi'*y;
+    v = Phi'*y(:);
     u = Binv*v;
     w = A\v;
     L = .5*n*log(2*pi)+(n-m)*log(se)+.5*log(det(A))+...

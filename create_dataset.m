@@ -1,8 +1,8 @@
 clear param
 
-param.use_dbc = false; % ディリクレ境界条件を入れるか否か
+param.use_dbc = true; % ディリクレ境界条件を入れるか否か
 
-param.sigma_eps = 0.2;
+param.sigma_eps = 0.1;
 
 % % use se
 % param.k.fh = @se_k;
@@ -13,7 +13,7 @@ param.sigma_eps = 0.2;
 param.k.fh = @matern_k;
 param.k.sigma = 1.0;
 param.k.l = 1.0;
-param.k.nu = 2;
+param.k.nu = 5;
 
 
 param.domain=[0,10];
@@ -51,6 +51,8 @@ y = f+param.sigma_eps*randn(size(f));
 f_test = F(param.data_points+1:end);
 y_test = f_test+param.sigma_eps*randn(size(f_test));
 
+x=x(:); y=y(:); f=f(:);
+x_test=x_test(:); f_test=f_test(:); y_test=y_test(:);
 save('data.mat','x','f','y','x_test','f_test','y_test','param');
 
 plot(x,y,'ro',x_test,f_test)

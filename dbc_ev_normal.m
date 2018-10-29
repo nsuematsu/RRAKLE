@@ -1,4 +1,4 @@
-function [evs] = dbc_ev_normal(param)
+function [evs,gevs] = dbc_ev_normal(param)
 %
     a = param.domain(1); b = param.domain(2);
     m = param.m;
@@ -8,20 +8,23 @@ function [evs] = dbc_ev_normal(param)
     P = b-a;
     rho = 1/P;        
     
-    J = 1:m;
-    evs = exp(-2*(pi*J*rho*0.5*l).^2);
-    % normalize so that its infinite sum to 1, first.
-    evs = evs/(0.5*(-1+theta3(exp(-2*(pi*rho*0.5*l).^2))));
+    F = .5*(1:m);
+    e = v*exp(-2*(pi*F*rho*l).^2);
 
-    % obtain max{k(x,x)}=k(c,c) when sum(κ_j)=1.
+    % obtain max{k(x,x)}=k(c,c)
     c = .5*(a+b);
     Phi = param.ef.fh(c,param);
-    kMax = Phi*diag(evs)*Phi';
+    kMax = Phi*diag(e)*Phi';
     
     % k=k(x,x) of the corresponding stationary kernel.
     k = v;
     
     % normalize
-    evs = k/kMax*evs;
+    evs = k/kMax*e;
+    
+    if nargout > 1
+        d = -4*(pi*F*rho*l).^2.*e;
+        gevs = v*P*(d/sum(e)-e*sum(d)/(sum(e)^2));
+    end
     
 end

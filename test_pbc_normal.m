@@ -4,7 +4,7 @@ param.domain = [a,b];
 param.m = 100;
 
 param.ev.fh = @pbc_ev_normal;
-param.ev.sigma = 1;
+param.ev.sigma = 2; v = param.ev.sigma^2;
 param.ev.l = 1;
 
 param.ef.fh = @pbc_ef;
@@ -14,11 +14,11 @@ x2 = a;
 
 [C,evs,Phi] = approx_covfunc(x1,x2,param);
 
-fprintf('sum(evs)=%f and (b-a)=%f\n',sum(evs),b-a)
+fprintf('sum(evs)=%f and v(b-a)=%f\n',sum(evs),v*(b-a))
 
 figure;
 subplot(2,2,1)
-param.k.sigma = 1;
+param.k.sigma = param.ev.sigma;
 param.k.l = param.ev.l;
 Cpse = pse_k(x1,a,param);
 Cse = se_k(x1,a,param);

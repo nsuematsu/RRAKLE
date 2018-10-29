@@ -12,11 +12,13 @@ param.sigma_eps = .1;
 param.ev.l = 1;
 param.ev.sigma = 1;
 
-param.ef.fh = @pbc_ef;
-param.ev.fh = @pbc_ev_normal;
-param.ev.fh_L = @pbc_ev_normal_L;
-% param.k.fh_L = @pse_L;
+% param.ef.fh = @pbc_ef;
+% param.ev.fh = @pbc_ev_normal;
+% param.ev.fh_L = @pbc_ev_normal_L;
 
+param.ef.fh = @dbc_ef;
+param.ev.fh = @dbc_ev_normal;
+param.ev.fh_L = @dbc_ev_normal_L;
 
 [mu,Sigma,L] = gpr_fixed_hyps(x,y,xstar,param);
 

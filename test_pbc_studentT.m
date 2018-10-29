@@ -6,7 +6,7 @@ param.domain = [a,b];
 param.m = 101;
 
 param.ev.fh = @pbc_ev_studentT;
-param.ev.sigma = 1;
+param.ev.sigma = 2; v = param.ev.sigma^2;
 param.ev.nu = 3;
 param.ev.l = 1.5;
 
@@ -17,7 +17,7 @@ x2 = a;
 
 [C,evs,Phi] = approx_covfunc(x1,x2,param);
 
-fprintf('sum(evs)=%f and (b-a)=%f\n',sum(evs),b-a)
+fprintf('sum(evs)=%f and v(b-a)=%f\n',sum(evs),v*(b-a))
 
 figure;
 subplot(2,2,1)
